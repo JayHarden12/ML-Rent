@@ -115,6 +115,9 @@ class DataPreprocessor:
         
         # Create feature matrix
         X = df[feature_columns].fillna(0)
+        import numpy as np
+        X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
+        X = np.clip(X, -1e6, 1e6)
         y = df['Price_Numeric']
         
         return X, y, feature_columns

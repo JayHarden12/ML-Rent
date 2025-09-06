@@ -1,158 +1,113 @@
-# 🏠 Nigerian House Rent Price Estimation System
+Nigerian House Rent Price Estimation System
+==========================================
 
-A comprehensive web application built with Python and Streamlit for predicting house rent prices in Nigeria using machine learning models.
+A Streamlit app for predicting Nigerian house rent prices using machine learning. It includes interactive prediction, data exploration, location insights, and model performance dashboards.
 
-## 🌟 Features
+Features
+--------
+- Interactive price predictor based on property attributes
+- Data analysis dashboard with histograms and comparisons
+- Location insights (top/cheapest areas and stats)
+- Model performance metrics and feature importance
+- Multiple models: Random Forest, Gradient Boosting, Linear Regression
 
-- **Interactive Price Predictor**: Get instant rent price estimates based on property features
-- **Data Analysis Dashboard**: Visualize rent trends and property distributions
-- **Location Insights**: Compare prices across different areas in Nigeria
-- **Model Performance Analysis**: View detailed model metrics and feature importance
-- **Multiple ML Models**: Random Forest, Gradient Boosting, Linear Regression, and more
+Quick Start
+-----------
 
-## 🚀 Quick Start
+Prerequisites
+- Python 3.9+ (3.11 recommended)
+- pip
 
-### Prerequisites
+1) Create and activate a virtual environment (optional but recommended)
 
-- Python 3.7 or higher
-- pip package manager
-
-### Installation
-
-1. **Clone or download the project files**
-   ```bash
-   # Ensure you have the following files in your directory:
-   # - app.py
-   # - data_preprocessor.py
-   # - ml_models.py
-   # - requirements.txt
-   # - nigeria-rent.csv
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the application**
-   ```bash
-   streamlit run app.py
-   ```
-
-4. **Open your browser**
-   - The app will automatically open at `http://localhost:8501`
-   - If it doesn't open automatically, copy the URL from the terminal
-
-## 📊 Dataset
-
-The application uses the `nigeria-rent.csv` dataset containing:
-- **98,000+ property listings** from various areas in Nigeria
-- **Property features**: Bedrooms, bathrooms, toilets, serviced status, etc.
-- **Location data**: Areas across Nigeria including Lagos, Abuja, and more
-- **Price information**: Annual rent prices in Nigerian Naira (₦)
-
-## 🏗️ Project Structure
-
+Windows (PowerShell):
 ```
-├── app.py                 # Main Streamlit application
-├── data_preprocessor.py   # Data cleaning and preprocessing
-├── ml_models.py          # Machine learning models and training
-├── requirements.txt      # Python dependencies
-├── nigeria-rent.csv     # Dataset
-└── README.md            # This file
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 ```
 
-## 🔧 Technical Details
+macOS/Linux (bash):
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-### Data Preprocessing
-- **Price cleaning**: Extracts numeric values from price strings
-- **Feature extraction**: Converts text features to numeric values
-- **Outlier removal**: Filters unrealistic price ranges
-- **Feature engineering**: Creates additional features like total rooms, price per bedroom
+2) Install dependencies
+```
+pip install -r requirements.txt
+```
 
-### Machine Learning Models
-- **Random Forest Regressor**: Handles non-linear relationships
-- **Gradient Boosting**: Advanced ensemble method
-- **Linear Regression**: Simple baseline model
-- **Ridge/Lasso Regression**: Regularized linear models
-- **Support Vector Regression**: Kernel-based regression
+3) Ensure the dataset is present
+- Place `nigeria-rent.csv` in the project root (same folder as `app.py`).
+- Expected columns include: `Price`, `Bedrooms`, `Bathrooms`, `Toilets`, `Location`, `Serviced`, `Newly Built`, `Furnished`.
 
-### Model Selection
-- **Cross-validation**: 5-fold cross-validation for robust evaluation
-- **Hyperparameter tuning**: Grid search for optimal parameters
-- **Performance metrics**: R² score, RMSE, MAE
-- **Feature importance**: Identifies most influential features
+4) Run the app
+```
+streamlit run app.py
+```
+Then open the provided URL (usually http://localhost:8501).
 
-## 📈 Usage Guide
+Dataset
+-------
+The app uses `nigeria-rent.csv`, which contains property listings with prices (NGN), attributes, and locations. The preprocessing pipeline:
+- Cleans price strings and extracts numeric values
+- Extracts numeric counts from text columns (bedrooms/bathrooms/toilets)
+- Removes outliers and missing essential values
+- Engineers features (total rooms, price per bedroom/room)
+- Label‑encodes area names
 
-### 1. Price Predictor Tab
-- Adjust property features using sliders and checkboxes
-- Select the area from the dropdown
-- View instant price predictions
-- See model confidence scores
+Project Structure
+-----------------
+```
+app.py                 # Streamlit application UI
+data_preprocessor.py   # Data cleaning and feature preparation
+ml_models.py           # Model training, selection, and prediction logic
+requirements.txt       # Python dependencies
+nigeria-rent.csv       # Dataset (not tracked if large)
+README.md              # Documentation
+```
 
-### 2. Data Analysis Tab
-- Explore price distributions
-- Analyze bedroom/bathroom vs price relationships
-- View property feature distributions
+Technical Details
+-----------------
+- Split: 80/20 train/test with `train_test_split`
+- Models: RandomForestRegressor, GradientBoostingRegressor, LinearRegression
+- Metrics: R^2, RMSE, MAE (reported per model)
+- Feature importance: available for tree‑based models
+- Caching: `@st.cache_data` speeds up reloads
 
-### 3. Location Insights Tab
-- Compare average prices across areas
-- Find most expensive and affordable areas
-- View detailed area statistics
+The standalone training script in `ml_models.py` also supports optional hyperparameter tuning with `GridSearchCV` (cv=3).
 
-### 4. Model Performance Tab
-- Compare different ML models
-- View feature importance rankings
-- Understand model accuracy and recommendations
+Usage Guide
+-----------
+1) Price Predictor
+- Set bedrooms, bathrooms, toilets, and amenities
+- Select area; the app encodes it to match the model
+- View the predicted rent and best model R^2
 
-## 🎯 Key Features Explained
+2) Data Analysis
+- Price distribution histogram
+- Average price by bedrooms/bathrooms
+- Distribution of amenities (serviced/newly built/furnished)
 
-### Price Prediction
-The system uses multiple machine learning models to predict rent prices based on:
-- Number of bedrooms, bathrooms, and toilets
-- Property amenities (serviced, newly built, furnished)
-- Location (area encoding)
-- Derived features (total rooms, price per room)
+3) Location Insights
+- Top 10 most expensive and most affordable areas
+- Area statistics table (average price and listing counts)
 
-### Data Visualization
-- **Interactive charts** using Plotly
-- **Real-time updates** based on user selections
-- **Responsive design** for different screen sizes
-- **Professional styling** with custom CSS
+4) Model Performance
+- Per‑model metrics (R^2, RMSE, MAE)
+- Feature importance bar chart (if available)
+- Best model highlight and brief recommendations
 
-### Model Performance
-- **Comprehensive evaluation** with multiple metrics
-- **Feature importance analysis** for model interpretability
-- **Model comparison** to identify best performers
-- **Performance recommendations** based on R² scores
+Train and Save a Model (optional)
+---------------------------------
+Run the standalone trainer to save a model artifact:
+```
+python ml_models.py
+```
+This reads `nigeria-rent.csv`, trains models, may tune a tree‑based model, and saves `rent_predictor_model.pkl` with the estimator, scaler, and feature importance. The Streamlit app trains on the fly by default and does not require a pre‑saved model.
 
-## 🔍 Model Performance
-
-The application typically achieves:
-- **R² Score**: 0.6-0.8 (depending on data quality)
-- **RMSE**: Varies by price range
-- **Best performing model**: Usually Random Forest or Gradient Boosting
-
-## 🛠️ Customization
-
-### Adding New Features
-1. Modify `data_preprocessor.py` to include new features
-2. Update feature list in `ml_models.py`
-3. Add UI controls in `app.py`
-
-### Improving Model Performance
-1. **Feature Engineering**: Add more derived features
-2. **Data Quality**: Improve data cleaning and outlier detection
-3. **Model Tuning**: Adjust hyperparameters
-4. **Ensemble Methods**: Combine multiple models
-
-### Styling
-- Modify CSS in the `st.markdown()` section of `app.py`
-- Update colors, fonts, and layout as needed
-
-## 📝 Requirements
-
+Requirements
+------------
 ```
 streamlit==1.28.1
 pandas==2.1.3
@@ -163,57 +118,29 @@ seaborn==0.12.2
 matplotlib==3.7.2
 ```
 
-## 🚨 Troubleshooting
+Troubleshooting
+---------------
+- Dataset not found: verify `nigeria-rent.csv` exists alongside `app.py`.
+- Slow first run: models train on startup; subsequent runs are faster due to caching.
+- Plotly axis updates: code uses `update_xaxes`/`update_yaxes` for compatibility.
+- Info logs like "No runtime found, using MemoryCacheStorageManager" are harmless.
 
-### Common Issues
-
-1. **Module not found errors**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Dataset not found**
-   - Ensure `nigeria-rent.csv` is in the same directory as `app.py`
-
-3. **Memory issues with large dataset**
-   - Reduce dataset size or use data sampling
-   - Increase system memory
-
-4. **Slow loading**
-   - The app caches data and models for faster subsequent loads
-   - First run may take longer due to model training
-
-### Performance Optimization
-
-1. **Enable caching**: The app uses `@st.cache_data` for optimal performance
-2. **Reduce data size**: Consider sampling for development
-3. **Model persistence**: Save trained models to avoid retraining
-
-## 🤝 Contributing
-
-1. Fork the repository
+Contributing
+------------
+1. Fork this repository
 2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+3. Make changes with tests/validation
+4. Open a pull request
 
-## 📄 License
+License
+-------
+MIT License
 
-This project is open source and available under the MIT License.
-
-## 🙏 Acknowledgments
-
+Acknowledgments
+---------------
 - Dataset: Nigerian property rental data
-- Libraries: Streamlit, scikit-learn, Plotly, Pandas
-- Community: Open source contributors
+- Libraries: Streamlit, scikit‑learn, Plotly, Pandas, NumPy
 
-## 📞 Support
+—
 
-For issues and questions:
-1. Check the troubleshooting section
-2. Review the code comments
-3. Create an issue in the repository
-
----
-
-**Built with ❤️ for the Nigerian real estate market**
+Built for the Nigerian real estate market.

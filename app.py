@@ -63,10 +63,10 @@ def load_and_preprocess_data():
         return pd.DataFrame(), None
 
 @st.cache_data
-def train_ml_models(df_clean, preprocessor):
+def train_ml_models(df_clean, _preprocessor):
     """Train machine learning models"""
     try:
-        X, y, feature_names = preprocessor.prepare_features(df_clean)
+        X, y, feature_names = _preprocessor.prepare_features(df_clean)
         
         # Initialize predictor
         predictor = RentPricePredictor()
@@ -241,7 +241,7 @@ def main():
             fig_top = px.bar(top_areas, x=top_areas.index, y='Average_Price',
                            title="Top 10 Most Expensive Areas",
                            labels={'index': 'Area', 'Average_Price': 'Average Price (₦)'})
-            fig_top.update_xaxis(tickangle=45)
+            fig_top.update_xaxes(tickangle=45)
             st.plotly_chart(fig_top, use_container_width=True)
         
         with col2:
@@ -250,7 +250,7 @@ def main():
             fig_bottom = px.bar(bottom_areas, x=bottom_areas.index, y='Average_Price',
                               title="Top 10 Most Affordable Areas",
                               labels={'index': 'Area', 'Average_Price': 'Average Price (₦)'})
-            fig_bottom.update_xaxis(tickangle=45)
+            fig_bottom.update_xaxes(tickangle=45)
             st.plotly_chart(fig_bottom, use_container_width=True)
         
         # Area statistics table
@@ -277,7 +277,7 @@ def main():
                 if predictor.feature_importance is not None:
                     st.subheader("🔍 Feature Importance")
                     fig_importance = px.bar(
-                        predictor.feature_importance.head(10), 
+                        predictor.feature_importance.head(10).to_frame(name='importance').reset_index().rename(columns={'index': 'feature'}), 
                         x='importance', 
                         y='feature',
                         orientation='h',
@@ -299,7 +299,7 @@ def main():
                     title="Model R² Score Comparison",
                     labels={'x': 'Model', 'y': 'R² Score'}
                 )
-                fig_comparison.update_xaxis(tickangle=45)
+                fig_comparison.update_xaxes(tickangle=45)
                 st.plotly_chart(fig_comparison, use_container_width=True)
                 
                 # Best model info
